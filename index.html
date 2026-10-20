@@ -1,1 +1,383 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פיצת יום הבוחר | הזמנת אונליין</title>
+    <style>
+        :root {
+            --primary: #ff4757;
+            --primary-dark: #ff6b81;
+            --secondary: #2ed573;
+            --dark: #2f3542;
+            --light: #f1f2f6;
+            --white: #ffffff;
+            --gray: #ced6e0;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: var(--white);
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        form {
+            padding: 30px;
+        }
+
+        .section {
+            background: #fafafa;
+            border: 1px solid #e1e1e1;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-dark);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 5px rgba(255, 71, 87, 0.3);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .option-card {
+            background: var(--white);
+            border: 2px solid var(--gray);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .option-card input {
+            accent-color: var(--primary);
+            width: 20px;
+            height: 20px;
+        }
+
+        .summary-box {
+            background: #fff3f3;
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .summary-box h3 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .total-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .btn-submit {
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            width: 100%;
+            padding: 16px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.4);
+        }
+
+        .btn-submit:hover {
+            background: #26af5f;
+            transform: scale(1.01);
+        }
+
+        .success-message {
+            display: none;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 30px;
+            text-align: center;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🍕 פיצת יום הבוחר</h1>
+        <p>הרכיבו את המגש המושלם שלכם בדיוק כמו שאתה אוהבים!</p>
+    </header>
+
+    <form id="pizzaForm" onsubmit="handleOrder(event)">
+        
+        <!-- פרטים אישיים -->
+        <div class="section">
+            <h2>👤 פרטים למשלוח</h2>
+            <div class="form-group">
+                <label for="name">שם מלא:</label>
+                <input type="text" id="name" required placeholder="הכנס את שמך המלא">
+            </div>
+            <div class="form-group">
+                <label for="phone">טלפון נייד:</label>
+                <input type="tel" id="phone" required placeholder="050-0000000">
+            </div>
+            <div class="form-group">
+                <label for="address">כתובת מלאה (רחוב, מספר, עיר):</label>
+                <input type="text" id="address" required placeholder="לדוגמה: הרצל 15, תל אביב">
+            </div>
+        </div>
+
+        <!-- גודל פיצה -->
+        <div class="section">
+            <h2>📏 בחירת גודל הפיצה</h2>
+            <div class="options-grid">
+                <label class="option-card">
+                    <input type="radio" name="size" value="אישית" data-price="45" checked onchange="calculateTotal()">
+                    <div>
+                        <strong>אישית</strong><br><small>45 ₪</small>
+                    </div>
+                </label>
+                <label class="option-card">
+                    <input type="radio" name="size" value="משפחתית" data-price="75" onchange="calculateTotal()">
+                    <div>
+                        <strong>משפחתית</strong><br><small>75 ₪</small>
+                    </div>
+                </label>
+                <label class="option-card">
+                    <input type="radio" name="size" value="ענקית" data-price="95" onchange="calculateTotal()">
+                    <div>
+                        <strong>ענקית (החגיגית)</strong><br><small>95 ₪</small>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- סוג בצק -->
+        <div class="section">
+            <h2>🌾 סוג הבצק</h2>
+            <div class="options-grid">
+                <label class="option-card">
+                    <input type="radio" name="dough" value="רגיל" checked> רגיל וקלאסי
+                </label>
+                <label class="option-card">
+                    <input type="radio" name="dough" value="דק"> איטלקי דק במיוחד
+                </label>
+                <label class="option-card">
+                    <input type="radio" name="dough" value="ללא גלוטן" data-price="10" onchange="calculateTotal()"> ללא גלוטן (+10 ₪)
+                </label>
+                <label class="option-card">
+                    <input type="radio" name="dough" value="מלא"> מקמח מלא אורגני
+                </label>
+            </div>
+        </div>
+
+        <!-- רוטב וגבינה -->
+        <div class="section">
+            <h2>🍅 רוטב וגבינות</h2>
+            <div class="form-group">
+                <label for="sauce">בחירת רוטב בסיס:</label>
+                <select id="sauce">
+                    <option value="עגבניות קלאסי">רוטב עגבניות קלאסי עם בזיליקום</option>
+                    <option value="שמנת כמהין">רוטב שמנת כמהין עשיר</option>
+                    <option value="פיקנטי">רוטב עגבניות חריף-אש</option>
+                    <option value="שום ותבלינים">רוטב שום ושמן זית</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cheese">תוספת גבינה מיוחדת:</label>
+                <select id="cheese" onchange="calculateTotal()">
+                    <option value="מוצרלה רגילה" data-price="0">מוצרלה רגילה (כלול)</option>
+                    <option value="כפולה" data-price="10">מוצרלה כפולה מטריפה (+10 ₪)</option>
+                    <option value="בולגרית ופרמזן" data-price="12">מיקס בולגרית ופרמזן (+12 ₪)</option>
+                    <option value="טבעונית" data-price="8">גבינה טבעונית מובחרת (+8 ₪)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- תוספות על הפיצה -->
+        <div class="section">
+            <h2>🍄 תוספות על הפיצה (6 ₪ לכל תוספת)</h2>
+            <div class="options-grid">
+                <label class="option-card"><input type="checkbox" name="toppings" value="בצל ירוק/לבן" data-price="6" onchange="calculateTotal()"> בצל סגול</label>
+                <label class="option-card"><input type="checkbox" name="toppings" value="פטריות טריות" data-price="6" onchange="calculateTotal()"> פטריות טריות</label>
+                <label class="option-card"><input type="checkbox" name="toppings" value="זיתים ירוקים" data-price="6" onchange="calculateTotal()"> זיתים ירוקים</label>
+                <label class="option-card"><input type="checkbox" name="toppings" value="זיתים שחורים" data-price="6" onchange="calculateTotal()"> זיתים שחורים</label>
+                <label class="option-card"><input type="checkbox" name="toppings" value="תירס מתוק" data-price="6" onchange="calculateTotal()"> תירס מתוק</label>
+                <label class="option-card"><input type="checkbox" name="toppings" value="בטן חציל קלוי" data-price="6" onchange="calculateTotal()"> חציל קלוי</label>
+                <label class="option-card"><input type="checkbox" name="toppings" value="פלפל חריף" data-price="6" onchange="calculateTotal()"> פלפל חריף</label>
+                <label class="option-card"><input type="checkbox" name="toppings" value="אננס" data-price="6" onchange="calculateTotal()"> אננס (למעזים!)</label>
+            </div>
+        </div>
+
+        <!-- שתייה וקינוחים -->
+        <div class="section">
+            <h2>🥤 שתייה קרה וקינוחים</h2>
+            <div class="options-grid">
+                <label class="option-card"><input type="checkbox" name="extras" value="קוקה קולה" data-price="12" onchange="calculateTotal()"> קוקה קולה (1.5 ליטר) - 12 ₪</label>
+                <label class="option-card"><input type="checkbox" name="extras" value="פחית ספרייט" data-price="8" onchange="calculateTotal()"> פחית ספרייט - 8 ₪</label>
+                <label class="option-card"><input type="checkbox" name="extras" value="מים מינרליים" data-price="7" onchange="calculateTotal()"> מים מינרליים - 7 ₪</label>
+                <label class="option-card"><input type="checkbox" name="extras" value="באר שוקולד" data-price="25" onchange="calculateTotal()"> פיצה שוקולד חמה - 25 ₪</label>
+            </div>
+        </div>
+
+        <!-- הערות -->
+        <div class="section">
+            <h2>📝 הערות מיוחדות להזמנה</h2>
+            <textarea id="notes" rows="3" placeholder="למשל: חיתוך ל-8 משולשים, לשים בשקית נפרדת את הרוטב שום..."></textarea>
+        </div>
+
+        <!-- תיבת סיכום ותשלום -->
+        <div class="summary-box">
+            <h3>סה"כ לתשלום:</h3>
+            <div class="total-price" id="totalPrice">45 ₪</div>
+        </div>
+
+        <button type="submit" class="btn-submit">שלח הזמנה עכשיו! 🚀</button>
+    </form>
+
+    <div id="successMessage" class="success-message">
+        🎉 ההזמנה נקלטה בהצלחה! השליח כבר בדרך אליך עם הפיצה הלוהטת! 🍕
+    </div>
+</div>
+
+<script>
+    function calculateTotal() {
+        let total = 0;
+
+        // חישוב מחיר הגודל
+        const selectedSize = document.querySelector('input[name="size"]:checked');
+        if (selectedSize) {
+            total += parseInt(selectedSize.getAttribute('data-price')) || 0;
+        }
+
+        // חישוב תוספת בצק
+        const selectedDough = document.querySelector('input[name="dough"]:checked');
+        if (selectedDough) {
+            total += parseInt(selectedDough.getAttribute('data-price')) || 0;
+        }
+
+        // חישוב גבינה מיוחדת
+        const cheeseSelect = document.getElementById('cheese');
+        const selectedCheeseOption = cheeseSelect.options[cheeseSelect.selectedIndex];
+        total += parseInt(selectedCheeseOption.getAttribute('data-price')) || 0;
+
+        // חישוב תוספות פיצה
+        const selectedToppings = document.querySelectorAll('input[name="toppings"]:checked');
+        selectedToppings.forEach(top => {
+            total += parseInt(top.getAttribute('data-price')) || 6;
+        });
+
+        // חישוב שתייה וקינוחים
+        const selectedExtras = document.querySelectorAll('input[name="extras"]:checked');
+        selectedExtras.forEach(ext => {
+            total += parseInt(ext.getAttribute('data-price')) || 0;
+        });
+
+        // עדכון תצוגת המחיר
+        document.getElementById('totalPrice').innerText = total + ' ₪';
+    }
+
+    function handleOrder(event) {
+        event.preventDefault();
+        document.getElementById('pizzaForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
